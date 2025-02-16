@@ -8,6 +8,9 @@ on:
 # concurrency:
 #   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
 #   cancel-in-progress: true
+env:
+  MY_GCR_NAMESPACE: 'JuliaParallel'
+  MY_GCR_IMAGENAME: 'dask-jobqueue-ci-images'
 permissions:
   contents: read
   packages: write
@@ -43,28 +46,30 @@ jobs:
           docker compose build
         env:
           MATRIX_CLUSTERMANAGER: ${{ matrix.clustermanager }}
-          
       - name: List images
         run: |
           docker ps -a
           docker images
       # TODO: Docker login here
-      - name: docker push to GitHub Container Registry
-        if: github.event_name != 'pull_request' && matrix.clustermanager != 'htcondor'
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker push daskdev/dask-clustermanager:${{ matrix.clustermanager }}
-
-      - name: Publish secondary SGE images to GitHub Container Registry
-        if: github.event_name != 'pull_request' && matrix.clustermanager == 'sge'
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker push daskdev/dask-clustermanager:${{ matrix.clustermanager }}-slave
-
-      # HTCondor images have composed tags.
+      # echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      # - name: docker push to GitHub Container Registry
+      #   if: github.event_name != 'pull_request' && matrix.clustermanager != 'htcondor'
+      #   run: |
+      #     docker push "daskdev/dask-clustermanager:${MATRIX_CLUSTERMANAGER:?}"
+      #     docker push ghcr.io/<your-GitHub-username>/store:latest
+      #     docker build . --tag ghcr.io/<your-GitHub-username>/store:latest
+      #   env:
+      #     MATRIX_CLUSTERMANAGER: ${{ matrix.clustermanager }}
+      # - name: Publish secondary SGE images to GitHub Container Registry
+      #   if: github.event_name != 'pull_request' && matrix.clustermanager == 'sge'
+      #   run: |
+      #     docker push daskdev/dask-clustermanager:${{ matrix.clustermanager }}-slave
       - name: Publish HTCondor images to GitHub Container Registry
-        if: github.event_name != 'pull_request' && matrix.clustermanager == 'htcondor'
+        # HTCondor images have composed tags.
+        # if: github.event_name != 'pull_request' && matrix.clustermanager == 'htcondor'
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker push daskdev/dask-clustermanager:${{ matrix.clustermanager }}-submit
-          docker push daskdev/dask-clustermanager:${{ matrix.clustermanager }}-execute
+          docker push "ghcr.io/${MY_GCR_NAMESPACE:?}/${MY_GCR_IMAGENAME:?}:${MATRIX_CLUSTERMANAGER:?}-submit"
+          docker push "ghcr.io/${MY_GCR_NAMESPACE:?}/${MY_GCR_IMAGENAME:?}:${MATRIX_CLUSTERMANAGER:?}-execute"
+        env:
+          MATRIX_CLUSTERMANAGER: ${{ matrix.clustermanager }}
+          
