@@ -1,3 +1,5 @@
+[![Build status](https://github.com/JuliaParallel/dask-jobqueue/actions/workflows/docker.yaml/badge.svg)](https://github.com/JuliaParallel/dask-jobqueue/actions/workflows/docker.yaml)
+
 This is a fork of: https://github.com/dask/dask-jobqueue
 
 We use these Docker images in the CI for:
