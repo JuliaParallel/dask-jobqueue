@@ -3,7 +3,7 @@ version: "3.4"
 services:
 
   master:
-    image: daskdev/dask-jobqueue:sge
+    image: ghcr.io/juliaparallel/dask-jobqueue-ci-images:sge
     build:
       context: .
       target: master
@@ -19,7 +19,7 @@ services:
     command: bash /dask-jobqueue/ci/sge/run-master.sh
 
   slave-one:
-    image: daskdev/dask-jobqueue:sge-slave
+    image: ghcr.io/juliaparallel/dask-jobqueue-ci-images:sge-slave
     build:
       context: .
       target: slave
@@ -37,7 +37,7 @@ services:
       - master
 
   slave-two:
-    image: daskdev/dask-jobqueue:sge-slave
+    image: ghcr.io/juliaparallel/dask-jobqueue-ci-images:sge-slave
     build:
       context: .
       target: slave
