@@ -12,7 +12,7 @@ services:
     command: bash -c 'condor_store_cred -p password -f /root/secrets/pool_password ; exec bash -x /start.sh'
 
   submit:
-    image: daskdev/dask-jobqueue:htcondor-submit
+    image: ghcr.io/juliaparallel/dask-jobqueue-ci-images:htcondor-submit
     build:
       context: .
       target: submit
@@ -30,7 +30,7 @@ services:
       - shared_space:/shared_space
 
   execute1:
-    image: daskdev/dask-jobqueue:htcondor-execute
+    image: ghcr.io/juliaparallel/dask-jobqueue-ci-images:htcondor-execute
     build:
       context: .
       target: execute
@@ -46,7 +46,7 @@ services:
       - shared_space:/shared_space
 
   execute2:
-    image: daskdev/dask-jobqueue:htcondor-execute
+    image: ghcr.io/juliaparallel/dask-jobqueue-ci-images:htcondor-execute
     build:
       context: .
       target: execute
