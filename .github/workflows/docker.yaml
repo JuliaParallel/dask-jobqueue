@@ -1,5 +1,4 @@
 name: Docker
-
 on:
   push:
     branches: "main"
@@ -36,6 +35,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: docker version
         run: |
+          which -a docker
           docker version
           docker compose version
       - name: docker compose build
