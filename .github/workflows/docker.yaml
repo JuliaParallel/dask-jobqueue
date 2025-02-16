@@ -8,7 +8,7 @@ on:
 #   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
 #   cancel-in-progress: true
 env:
-  MY_GCR_NAMESPACE: 'JuliaParallel'
+  MY_GCR_NAMESPACE: 'juliaparallel'
   MY_GCR_IMAGENAME: 'dask-jobqueue-ci-images'
 permissions:
   contents: read
